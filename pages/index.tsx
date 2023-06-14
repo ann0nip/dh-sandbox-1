@@ -4,11 +4,22 @@ import Image from 'next/image';
 import styles from '../styles/Home.module.css';
 import Voucher from '../components/voucher.component';
 import { Button } from '@mui/material';
+import { useContext } from 'react';
+import MyContext from '../contexts/MainContext';
 
 const Home: NextPage = () => {
+    const contextValue = useContext(MyContext);
+
     const handleDownload = async () => {
         console.log('downloading...');
-        const response = await fetch('/api/voucher');
+        console.log(contextValue);
+        const response = await fetch('/api/voucher', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(contextValue),
+        });
         const pdfBlob = await response.blob();
         const url = URL.createObjectURL(pdfBlob);
         const link = document.createElement('a');
